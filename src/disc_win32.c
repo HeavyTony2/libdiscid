@@ -31,9 +31,13 @@
 #include <string.h>
 #include <stdio.h>
 
-
+#if defined(__CYGWIN__)
+#include <ntddcdrm.h>
+#elif defined(__MINGW32__)
+#include <ddk/ntddcdrm.h>
+#else
 #include "ntddcdrm.h"
-
+#endif
 
 #include "discid/discid.h"
 #include "discid/discid_private.h"
