@@ -50,46 +50,13 @@ CONFIGURE_FILE(Doxyfile.in Doxyfile)
 CONFIGURE_FILE(include/discid/discid.h.in include/discid/discid.h)
 
 # normalizing operating systems
-IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    SET(libdiscid_OS "linux")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    SET(libdiscid_OS "darwin")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    SET(libdiscid_OS "bsd")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "NetBSD")
-    SET(libdiscid_OS "bsd")
-    SET(libdiscid_OSDEP_LIBS util) # for getrawpartition
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
-    SET(libdiscid_OS "bsd")
-    SET(libdiscid_OSDEP_LIBS util) # for getrawpartition
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "SunOS")
-    SET(libdiscid_OS "solaris")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Haiku")
-    SET(libdiscid_OS "haiku")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    SET(libdiscid_OS "win32")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
-    SET(libdiscid_OS "win32")
-ELSE()
-    SET(libdiscid_OS "generic")
-    MESSAGE(STATUS "WARNING: unknown operating system, no disc reading available!")
-ENDIF()
 
-# choose platform dependent source files
-IF(libdiscid_OS STREQUAL "win32")
-    SET(libdiscid_OSDEP_SRCS src/toc.c src/disc_win32.c)
-    SET(libdiscid_RCS ${CMAKE_CURRENT_BINARY_DIR}/versioninfo.rc)
+SET(libdiscid_OS "win32")
+SET(libdiscid_OSDEP_SRCS src/toc.c src/disc_win32.c)
+SET(libdiscid_RCS ${CMAKE_CURRENT_BINARY_DIR}/versioninfo.rc)
 ELSEIF(libdiscid_OS STREQUAL "generic")
     SET(libdiscid_OSDEP_SRCS src/disc_${libdiscid_OS}.c)
-ELSE()
-    # unix platforms are the standard/default case
-    SET(libdiscid_OSDEP_SRCS src/toc.c src/unix.c src/disc_${libdiscid_OS}.c)
-    IF(libdiscid_OS STREQUAL "darwin") # Extra libraries needed
-        FIND_LIBRARY(COREFOUNDATION_LIBRARY CoreFoundation)
-        FIND_LIBRARY(IOKIT_LIBRARY IOKit)
-        SET(libdiscid_OSDEP_LIBS ${COREFOUNDATION_LIBRARY} ${IOKIT_LIBRARY})
-    ENDIF()
-ENDIF()
+
 
 STRING(REPLACE ";" " " libdiscid_OSDEP_STR "${libdiscid_OSDEP_SRCS}")
 MESSAGE(STATUS "Using discid implementation ${libdiscid_OSDEP_STR}")
