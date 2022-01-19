@@ -50,9 +50,9 @@ CONFIGURE_FILE(Doxyfile.in Doxyfile)
 CONFIGURE_FILE(include/discid/discid.h.in include/discid/discid.h)
 
 # normalizing operating systems
-IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    SET(libdiscid_OS "linux")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+#IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    #SET(libdiscid_OS "linux")
+IF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     SET(libdiscid_OS "darwin")
 ELSEIF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
     SET(libdiscid_OS "bsd")
@@ -83,7 +83,7 @@ ELSEIF(libdiscid_OS STREQUAL "generic")
     SET(libdiscid_OSDEP_SRCS src/disc_${libdiscid_OS}.c)
 ELSE()
     # unix platforms are the standard/default case
-    SET(libdiscid_OSDEP_SRCS src/toc.c src/unix.c src/disc_${libdiscid_OS}.c)
+    #SET(libdiscid_OSDEP_SRCS src/toc.c src/unix.c src/disc_${libdiscid_OS}.c)
     IF(libdiscid_OS STREQUAL "darwin") # Extra libraries needed
         FIND_LIBRARY(COREFOUNDATION_LIBRARY CoreFoundation)
         FIND_LIBRARY(IOKIT_LIBRARY IOKit)
