@@ -54,8 +54,7 @@ CONFIGURE_FILE(include/discid/discid.h.in include/discid/discid.h)
 SET(libdiscid_OS "win32")
 SET(libdiscid_OSDEP_SRCS src/toc.c src/disc_win32.c)
 SET(libdiscid_RCS ${CMAKE_CURRENT_BINARY_DIR}/versioninfo.rc)
-ELSEIF(libdiscid_OS STREQUAL "generic")
-    SET(libdiscid_OSDEP_SRCS src/disc_${libdiscid_OS}.c)
+
 
 
 STRING(REPLACE ";" " " libdiscid_OSDEP_STR "${libdiscid_OSDEP_SRCS}")
