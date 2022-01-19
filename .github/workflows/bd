@@ -1,0 +1,50 @@
+name: Bd
+
+on: workflow_dispatch
+
+jobs:
+  
+  package-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        generator:
+        - Visual Studio 16 2019
+        architecture:
+        - Win32
+        - x64
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup cmake
+      run: |
+        mkdir build
+        cd build
+        cmake -G $env:GENERATOR -A $env:ARCH ..
+      env:
+        GENERATOR: ${{ matrix.generator }}
+        ARCH: ${{ matrix.architecture }}
+    - name: Build
+      run: cmake --build build --config Release
+    - name: Package
+      run: |
+        cd build
+        mkdir artifacts
+        cp .\Release\* artifacts
+        cp -R .\include artifacts
+        cp ..\COPYING artifacts
+        cp ..\README artifacts
+        cp ..\ChangeLog artifacts
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: libdiscid-windows-${{ matrix.architecture }}
+        path: build/artifacts/
+    - name: Test
+      run: |
+        cd build
+        cmake --build . --config Release --target test_core test_put test_read test_read_full
+        .\Release\test_core.exe
+        .\Release\test_put.exe
+        # .\Release\test_read.exe
+        # .\Release\test_read_full.exe
+
